@@ -1,9 +1,22 @@
 from tkinter import *
+from tkinter import Canvas
 
 root = Tk()
-
 root.title("red black tree")
-root.geometry("1500x1000")
+window_width = 1500
+window_height = 900
+
+# get the screen dimension
+screen_width = root.winfo_screenwidth()
+screen_height = root.winfo_screenheight()
+
+# find the center point
+center_x = int(screen_width / 2 - window_width / 2)
+center_y = int(screen_height / 2 - window_height / 2)
+
+# set the position of the window to the center of the screen
+root.geometry(f'{window_width}x{window_height}+{center_x}+{center_y}')
+# root.geometry("1500x1000+50+50")
 root.resizable(0, 0)
 
 
@@ -35,9 +48,26 @@ find_button.grid(column=1, row=2, padx=3, pady=5)
 find_textbox = Entry(root)
 find_textbox.grid(column=0, row=2, padx=3, pady=5)
 
+checkbox1 = Checkbutton(root,
+                        text='pre order',
+                        onvalue='agree',
+                        offvalue='disagree')
+checkbox1.place(x=20, y=110)
+checkbox2 = Checkbutton(root,
+                        text='post order',
+                        onvalue='agree',
+                        offvalue='disagree')
+checkbox2.place(x=20, y=150)
+checkbox3 = Checkbutton(root,
+                        text='in order',
+                        onvalue='agree',
+                        offvalue='disagree')
+checkbox3.place(x=20, y=190)
+
 # add find button
-print_button = Button(root, text="Print").grid(column=0, row=3)
+print_button = Button(root, text="Print").place(x=120, y=150)
 
-quit_button = Button(root, text="Quit", command=root.destroy).grid(column=0, row=4, padx=5)
+quit_button = Button(root, text="Quit", command=root.destroy).place(y=860, x=10)
 
+c = Canvas(root, width=1180, height=890, bg='white').place(x=310, y=0)
 root.mainloop()
