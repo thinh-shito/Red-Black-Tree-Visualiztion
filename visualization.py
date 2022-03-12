@@ -52,20 +52,20 @@ checkbox1 = Checkbutton(root,
                         text='pre order',
                         onvalue='agree',
                         offvalue='disagree')
-checkbox1.place(x=20, y=110)
+checkbox1.place(x=30, y=120)
 checkbox2 = Checkbutton(root,
                         text='post order',
                         onvalue='agree',
                         offvalue='disagree')
-checkbox2.place(x=20, y=150)
+checkbox2.place(x=30, y=160)
 checkbox3 = Checkbutton(root,
                         text='in order',
                         onvalue='agree',
                         offvalue='disagree')
-checkbox3.place(x=20, y=190)
+checkbox3.place(x=30, y=200)
 
 # add find button
-print_button = Button(root, text="Print").place(x=120, y=150)
+print_button = Button(root, text="Print").place(x=130, y=160)
 
 quit_button = Button(root, text="Quit", command=root.destroy).place(y=860, x=10)
 
