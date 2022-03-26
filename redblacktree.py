@@ -21,7 +21,7 @@ class Node:
         self.color = 1
 
 
-class coor:
+class coord:
     key = 0
     pos0 = [0, 0]
     pos1 = [0, 0]
@@ -41,12 +41,7 @@ class coor:
     def get_key(self):
         return self.key
 
-    def __del__(self):
-        del self.pos0
-        del self.pos1
-        del self.color
-        del self.key
-        del self.side
+    
 
 
 class RedBlackTree:
@@ -378,61 +373,51 @@ class RedBlackTree:
         self.list_key(self.root, keys)
         return keys
 
-    # def list_node(self, node, nodes=None):
-    #     if nodes is None:
-    #         nodes = []
-    #     if node != self.NULL:
-    #         self.list_node(node.left, nodes)
-    #         nodes.append(node)
-    #         self.list_node(node.right, nodes)
-
     def coordinates(self, nodes):
-        tree = self.root  # start with root of the tree
+        list_coords = nodes
+        root = self.root  # start with root of the tree
         # Place root node at position tree.pos
-        # if tree.item != 0:
-        tree.pos = [mid_canvas_width, 100]
-        node1 = coor(tree.pos, tree.pos, tree.color, tree.item)
-        nodes.append(node1)
-        # Recursively place the other nodes and edges
-        level = 0
-        print(f"\n {mid_canvas_width}")
+        if root.item != 0:
+            root_coord = [mid_canvas_width, 100]
+            root.pos = root_coord
+            node1 = coord(root_coord, root_coord, root.color, root.item)
+            list_coords.append(node1)
 
-        def add_nodes(node, level, nodes):
-            if node.left and node.left.item != 0:  # if left subtree: position node to left of parent
-                node.left.pos[0] = node.pos[0] - 16 * radius // level  # x
-                node.left.pos[1] = node.pos[1] + 2 * radius  # y
-                node2 = coor(node.pos, node.left.pos, node.left.color, node.left.item, 'l')
-                nodes.append(node2)
-                print(f"{node.item} l")
+            # Recursively place the other nodes and edges
+            def add_nodes(node, level, nodes, coords):
+                if node.left and node.left.item != 0:  # if left subtree: position node to left of parent
+                    new_coord = [coords[0] - 16 * radius // level, coords[1] + 3*radius]
+                    node.left.pos = new_coord
+                    node2 = coord(coords, new_coord, node.left.color,node.left.item, 'l')
+                    nodes.append(node2)
+                    # recurse on left subtree
+                    add_nodes(node.left, level + 1, nodes, new_coord)
 
-                add_nodes(node.left, level + 1, nodes)
-            if node.right and node.right.item != 0:  # if right subtree: position node to right of parent
-                node.right.pos[0] = node.pos[0] + 16 * radius // level  # x
-                node.right.pos[1] = node.pos[1] + 2 * radius  # y
-                node3 = coor(node.pos, node.right.pos, node.right.color, node.right.item, 'r')
-                nodes.append(node3)
-                print(f"{node.item} r")
+                if node.right and node.right.item != 0:  # if right subtree: position node to right of parent
+                    new_coord = [coords[0] + 16 * radius // level, coords[1] + 3*radius]
+                    node.right.pos = new_coord
+                    node3 = coord(coords, new_coord, node.right.color,node.right.item, 'r')
+                    nodes.append(node3)
+                    # recurse on right subtree
+                    add_nodes(node.right, level + 1, nodes, new_coord)
 
-                add_nodes(node.right, level + 1, nodes)
-
-        add_nodes(tree, level + 1, nodes)
+            add_nodes(self.root, 1, list_coords, root_coord)
+        return list_coords
 
     def get_coordinates(self):
-        nodes = []
-        self.coordinates(nodes)
-        return nodes
+        return self.coordinates([])
 
 
 if __name__ == "__main__":
     bst = RedBlackTree()
 
     keys = ['13', '9', '5']
-    for i in keys:
-        bst.insert(int(i))
-        node = bst.get_coordinates()
-        for j in node:
-            print(j.key, j.get())
-        print('\n')
+    # for i in keys:
+    #     bst.insert(int(i))
+    #     node = bst.get_coordinates()
+    #     for j in node:
+    #         print(j.key, j.get())
+    #     print('\n')
     # bst.insert(60)
     # bst.insert(75)
     # bst.insert(57)

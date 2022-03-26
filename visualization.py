@@ -25,38 +25,23 @@ vr = 'verify'
 nodes = []
 forest = []
 step = 0
-flag = 0
+flag = -1
 rbt = RBT.RedBlackTree()
 
 
-# def step_to_step():
-#     global step
-#     global flag
-#     global forest
-#     c.delete(ALL)
-#     visualize(forest[flag])
-#     if flag == len(forest) -1:
-#         step = flag
-#         return
-#     flag += 1
-
-#     c.after(2000, step_to_step)
-
-def step_to_step() :
+def step_to_step():
     global step
     global flag
     global forest
-    for i in forest[flag]:
-        print(i.get_key(), i.get())
-    print('\n')
-    # c.delete(ALL)
-    # visualize(forest[flag])
+    c.delete(ALL)
+    visualize(forest[flag])
     if flag == len(forest) - 1:
         step = flag
         return
     flag += 1
 
     c.after(2000, step_to_step)
+
 
 
 def check_input(ar):
@@ -74,9 +59,11 @@ def insert_tree():
     # c.delete(day)
     global forest
     global rbt
+    global flag
     ar_split = box.get().split(',')
     if check_input(ar_split) == 0:
         box.delete(0, END)
+        flag += 1
         for i in ar_split:
             # nodes.append([f'o{i}', f'l{i}'])
             rbt.insert(int(i))
@@ -95,9 +82,8 @@ def delete_tree():
     for i in ar_split:
         # nodes.remove([f'o{i}', f'l{i}'])
         node = rbt.searchTree(int(i))
-
+        line += 1
         if node.item == 0:
-            line += 1
             error = f"Node {i} is not in the tree"
             # tag = f"err{line}"
             notion.create_text(100, 20 + line * 20, text=error,
@@ -110,8 +96,8 @@ def delete_tree():
             notion.create_text(100, 20 + line * 20, text=verify,
                                font=f, fill='black', tag=vr, justify='left')
             notion.after(3000, notion.delete, vr)
-            forest.append(rbt.get_list_node())
-    step_to_step()
+            forest.append(rbt.get_coordinates())
+            step_to_step()
     print(ar_split)
 
 
@@ -132,7 +118,37 @@ def empty_canvas():
 def list_key():
     keys = ''.join(str(i) + ' ' for i in rbt.get_list_key())
     return keys
+# def coordinates(tree, nodes):
+#         coords = nodes
+#         root = tree.root  # start with root of the tree
+#         # Place root node at position tree.pos
+#         # if tree.item != 0:
+#         coord = [mid_canvas_width, 100]
+#         root.pos = coord
+#         node1 = RBT.coord(coord, coord, root.color, root.item)
+#         coords.append(node1)
+#         # Recursively place the other nodes and edges
+#         level = 0
 
+#         def add_nodes(node, level, nodes,coord):
+#             if node.left and node.left.item != 0:  # if left subtree: position node to left of parent
+#                 new_coord = [node.pos[0] - 16*radius//level, node.pos[1] + 2*radius ]
+#                 node.left.pos = new_coord
+#                 node2 = RBT.coord(coord, new_coord, node.left.color, node.left.item, 'l')
+#                 nodes.append(node2)
+
+#                 add_nodes(node.left, level + 1, nodes, new_coord)  # recurse on left subtree
+
+#             if node.right and node.right.item != 0:  # if right subtree: position node to right of parent
+#                 new_coord = [node.pos[0] + 16*radius//level, node.pos[1] + 2*radius ]
+#                 node.right.pos = new_coord
+#                 node3 = RBT.coord(coord, new_coord, node.right.color, node.right.item, 'r')
+#                 nodes.append(node3)
+
+#                 add_nodes(node.right, level + 1, coords, new_coord)
+            
+#         add_nodes(tree.root, level + 1, coords,coord)
+#         return coords
 
 def print_tree():
     keys = list_key()
@@ -164,29 +180,22 @@ def skip_forward():
 
 def visualize(nodes):
     for i in nodes:
-        if i.side != 'm':
-            if i.side == 'l':
-                create_edge(i.pos0[0] - radius + 3, i.pos0[1] + 10,
-                            i.pos1[0] + radius, i.pos1[1])
-            else:
-                create_edge(i.pos0[0] + radius - 3, i.pos0[1] + 10,
-                            i.pos1[0] - radius, i.pos1[1])
+        if i.side == 'l':
+            create_edge(i.pos0[0] - radius + 3, i.pos0[1] + 10,
+                        i.pos1[0] + radius, i.pos1[1])
+        elif i.side == 'r':
+            create_edge(i.pos0[0] + radius - 3, i.pos0[1] + 10,
+                        i.pos1[0] - radius, i.pos1[1])
         create_node(i.pos1, i.color, f"{i.key}")
-
-
-# def create_node(x,y, r = radius, color='black', text='null'):
-#     new_circle = c.create_oval(x-r, y-r, x+r, y+r, fill=color, outline='black', width=2)
-#     new_txt = c.create_text(x, y, text=text, font= f, fill='white', justify='center')
-#     circles.append([new_circle, new_txt])
 
 def create_node(pos, color=0, text='null'):
     x = pos[0]
     y = pos[1]
     r = radius
-    cor = x - r, y - r, x + r, y + r
+    coord = x - r, y - r, x + r, y + r
     o_tag = 'o' + text
     l_tag = 'l' + text
-    c.create_oval(cor, fill=colors[color], outline='black', width=3, tag=o_tag)
+    c.create_oval(coord, fill=colors[color], outline='black', width=3, tag=o_tag)
     c.create_text(pos, text=text, font=f, fill='white',
                   justify='center', tag=l_tag)
     # nodes.append([o_tag, l_tag])
