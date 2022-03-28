@@ -3,6 +3,8 @@ from tkinter import *
 from tkinter import Canvas
 import time
 import redblacktree as RBT
+import numpy as np
+from numpy import random
 
 window_width = 1680
 window_height = 1050
@@ -17,32 +19,38 @@ f_b = ('Roboto', 16, 'bold')
 f = ('Roboto', 16)
 
 colors = ['black', 'red']
-radius = 20
+radius = 16
 
 day = "day"
 err = 'error'
 vr = 'verify'
+de = 'delete'
+se = 'search'
 nodes = []
 forest = []
 step = 0
 flag = -1
 rbt = RBT.RedBlackTree()
-
+line = -1
+speed = 750
+p = 1
 
 def step_to_step():
     global step
     global flag
     global forest
-    c.delete(ALL)
-    visualize(forest[flag])
-    if flag == len(forest) - 1:
-        step = flag
-        return
-    flag += 1
+    global speed 
+    global p
+    if p:
+        c.delete(ALL)
+        visualize(forest[flag])
+    
+        if flag == len(forest) - 1:
+            step = flag
+            return
+        flag += 1
 
-    c.after(2000, step_to_step)
-
-
+    c.after(speed, step_to_step)
 
 def check_input(ar):
     for i in ar:
@@ -67,7 +75,8 @@ def insert_tree():
         for i in ar_split:
             # nodes.append([f'o{i}', f'l{i}'])
             rbt.insert(int(i))
-            forest.append(rbt.get_coordinates())
+            # forest.append(rbt.get_coordinates())
+            forest = rbt.get_forest()
             # print(f"{forest[-1]}")
         step_to_step()
     print(ar_split)
@@ -75,10 +84,10 @@ def insert_tree():
 
 
 def delete_tree():
+    global line
     c.delete(day)
     ar_split = box.get().split(',')
     box.delete(0, END)
-    line = -1
     for i in ar_split:
         # nodes.remove([f'o{i}', f'l{i}'])
         node = rbt.searchTree(int(i))
@@ -87,68 +96,66 @@ def delete_tree():
             error = f"Node {i} is not in the tree"
             # tag = f"err{line}"
             notion.create_text(100, 20 + line * 20, text=error,
-                               font=f, fill='black', tag=err, justify='left')
-            notion.after(3000, notion.delete, err)
+                               font=f, fill='black', tag=de, justify='left')
+            notion.after(3000, notion.delete, de)
         else:
             rbt.delete_node(int(i))
             verify = f"Deleted node {i}"
             # tag = f"err{line}"
             notion.create_text(100, 20 + line * 20, text=verify,
-                               font=f, fill='black', tag=vr, justify='left')
-            notion.after(3000, notion.delete, vr)
+                               font=f, fill='black', tag=de, justify='left')
+            notion.after(3000, notion.delete, de)
             forest.append(rbt.get_coordinates())
             step_to_step()
     print(ar_split)
 
 
-def find_tree():
+def search_tree():
+    global line
     c.delete(day)
     ar_split = box.get().split(',')
     box.delete(0, END)
+    for i in ar_split:
+        node = rbt.searchTree(int(i))
+        line += 1
+        if node.item == 0:
+            error = f"Node {i} is not in the tree"
+            # tag = f"err{line}"
+            notion.create_text(100, 20 + line * 20, text=error,
+                               font=f, fill='black', tag=se, justify='left')
+            notion.after(3000, notion.delete, se)
+        else:
+            rbt.delete_node(int(i))
+            verify = f"Exist node {i}"
+            # tag = f"err{line}"
+            notion.create_text(100, 20 + line * 20, text=verify,
+                               font=f, fill='black', tag=se, justify='left')
+            notion.after(3000, notion.delete, se)
+    print(ar_split)
 
+def random_tree():
+    box.delete(0,END)
+    arr = np.random.randint(100,size=16)
+    arr_split = ",".join(map(str, arr))
+    box.insert(0, arr_split)
 
 def empty_canvas():
+    global forest
+    global step
+    global flag
     c.delete(ALL)
     nodes = rbt.get_list_key()
     for i in nodes:
         rbt.delete_node(i)
-    # forest.clear()
+    forest.clear()
+    forest= []
+    step = 0
+    flag = -1
 
 
 def list_key():
     keys = ''.join(str(i) + ' ' for i in rbt.get_list_key())
     return keys
-# def coordinates(tree, nodes):
-#         coords = nodes
-#         root = tree.root  # start with root of the tree
-#         # Place root node at position tree.pos
-#         # if tree.item != 0:
-#         coord = [mid_canvas_width, 100]
-#         root.pos = coord
-#         node1 = RBT.coord(coord, coord, root.color, root.item)
-#         coords.append(node1)
-#         # Recursively place the other nodes and edges
-#         level = 0
-
-#         def add_nodes(node, level, nodes,coord):
-#             if node.left and node.left.item != 0:  # if left subtree: position node to left of parent
-#                 new_coord = [node.pos[0] - 16*radius//level, node.pos[1] + 2*radius ]
-#                 node.left.pos = new_coord
-#                 node2 = RBT.coord(coord, new_coord, node.left.color, node.left.item, 'l')
-#                 nodes.append(node2)
-
-#                 add_nodes(node.left, level + 1, nodes, new_coord)  # recurse on left subtree
-
-#             if node.right and node.right.item != 0:  # if right subtree: position node to right of parent
-#                 new_coord = [node.pos[0] + 16*radius//level, node.pos[1] + 2*radius ]
-#                 node.right.pos = new_coord
-#                 node3 = RBT.coord(coord, new_coord, node.right.color, node.right.item, 'r')
-#                 nodes.append(node3)
-
-#                 add_nodes(node.right, level + 1, coords, new_coord)
-            
-#         add_nodes(tree.root, level + 1, coords,coord)
-#         return coords
 
 def print_tree():
     keys = list_key()
@@ -176,6 +183,21 @@ def skip_forward():
 
     c.delete(ALL)
     visualize(forest[step])
+
+def pause():
+    global p
+    if p:
+        pause_button.config(text='Play')
+    else:
+        pause_button.config(text='Pause')
+    p = abs(p - 1)
+    
+
+def scale_speed(value):
+    global speed
+    speed = int(value)
+    speed_text.configure(text= f"Speed: {speed/1000}x")
+    print(f"\n{speed}")
 
 
 def visualize(nodes):
@@ -220,18 +242,33 @@ root.geometry(f'{window_width}x{window_height}+{center_x}+{center_y}')
 
 # create canvas
 
-main = Frame(root, width=window_width, height=window_height, bg='#000000')
-main.pack()
-
+main = Frame(root, width=window_width, height=window_height, bg='#000000', highlightthickness=0)
+main.pack(anchor=CENTER)
+# add control 
 # add skipback button
 skipback = Button(main, text='Skip Back', highlightbackground='#000000',
                   highlightthickness=0, bg='#000000', fg='#ffffff', command=skip_back)
-skipback.place(x=window_width // 2 - 50, y=985)
+skipback.place(x=window_width // 2 - 115, y=985)
 
 # add skipforward button
 skipforward = Button(main, text='Skip Forward', highlightbackground='#000000',
                      highlightthickness=0, bg='#000000', fg='#ffffff', command=skip_forward)
-skipforward.place(x=window_width // 2 + 50, y=985)
+skipforward.place(x=window_width // 2 + 57, y=985)
+
+# add pause button
+pause_button = Button(main, text='Pause', highlightbackground='#000000',width=5,
+                     highlightthickness=0, bg='#000000', fg='#ffffff', command=pause)
+pause_button.place(x=window_width // 2 - 21, y=985)
+
+# add scale speed button
+var = IntVar(None, 750)
+scale = Scale( main, variable = var , bg='#000000', from_=0, to=1500, resolution=100,showvalue=0, orient=HORIZONTAL, length=200,width = 15, fg='#ffffff',command=scale_speed)
+scale.place(x=100, y=990)
+speed_text = Label(main, bg='#000000', fg='#ffffff')
+speed_text.config(text= f"Speed: {speed/1000}x")
+speed_text.place(x=310, y=990)
+
+
 
 c = Canvas(main, width=canvas_width, height=canvas_height, bg='white')
 c.pack(padx=40, pady=40, fill=BOTH, expand=True)
@@ -243,21 +280,25 @@ notion = Canvas(c, width=200, height=300, bg='#B1D149',
 notion.place(x=1400 - 8, y=635)
 
 # control panel
-fr = Frame(c, width=150, height=172, bg=fr_bg)
-fr.place(x=8, y=735)
+fr = Frame(c, width=150, height=172, bg=fr_bg,highlightcolor='#000000', highlightthickness=0)
+fr.place(x=8, y=715)
 
 # add box
 box = Entry(fr, font=('Robot', 16), bg='#FFCC99', fg='white',
             width=15, highlightthickness=0, borderwidth=0)
 box.pack(padx=5, pady=5, expand=True, fill=BOTH)
 
+# add randomize button
+random_button = Button(fr, text="Random", command=random_tree,
+                       bg=fr_bg, fg='white', highlightbackground=fr_bg)
+random_button.pack(expand=True, fill=BOTH)
 # add insertion button
 insert_button = Button(fr, text="Insert", command=insert_tree,
                        bg=fr_bg, fg='white', highlightbackground=fr_bg)
 insert_button.pack(expand=True, fill=BOTH)
 
 # add find button
-search_button = Button(fr, text="Search", command=find_tree,
+search_button = Button(fr, text="Search", command=search_tree,
                        bg=fr_bg, fg='white', highlightbackground=fr_bg)
 search_button.pack(expand=True, fill=BOTH)
 
@@ -280,5 +321,4 @@ print_button.pack(expand=True, fill=BOTH)
 label = Label(fr, text="Method", bg=fr_bg,
               fg='white', highlightbackground=fr_bg)
 label.pack(padx=10, expand=True, fill=BOTH)
-
 root.mainloop()
