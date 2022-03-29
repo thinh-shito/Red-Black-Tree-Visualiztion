@@ -321,43 +321,43 @@ class RedBlackTree:
     def left_rotate(self, x):
         y = x.right
         x.right = y.left
-        self.forest.append(self.get_coordinates())
+        # self.forest.append(self.get_coordinates())
         if y.left != self.NULL:
             y.left.parent = x
-            self.forest.append(self.get_coordinates())
+            # self.forest.append(self.get_coordinates())
 
         y.parent = x.parent
-        self.forest.append(self.get_coordinates())
+        # self.forest.append(self.get_coordinates())
         if x.parent is None:
             self.root = y
         elif x == x.parent.left:
             x.parent.left = y
         else:
             x.parent.right = y
-        self.forest.append(self.get_coordinates())
+        # self.forest.append(self.get_coordinates())
         y.left = x
-        self.forest.append(self.get_coordinates())
+        # self.forest.append(self.get_coordinates())
         x.parent = y
 
     def right_rotate(self, x):
         y = x.left
         x.left = y.right
-        self.forest.append(self.get_coordinates())
+        # self.forest.append(self.get_coordinates())
         if y.right != self.NULL:
             y.right.parent = x
-            self.forest.append(self.get_coordinates())
+            # self.forest.append(self.get_coordinates())
 
         y.parent = x.parent
-        self.forest.append(self.get_coordinates())
+        # self.forest.append(self.get_coordinates())
         if x.parent is None:
             self.root = y
         elif x == x.parent.right:
             x.parent.right = y
         else:
             x.parent.left = y
-        self.forest.append(self.get_coordinates())
+        # self.forest.append(self.get_coordinates())
         y.right = x
-        self.forest.append(self.get_coordinates())
+        # self.forest.append(self.get_coordinates())
         x.parent = y
 
     def insert(self, key):
@@ -433,7 +433,7 @@ class RedBlackTree:
             # Recursively place the other nodes and edges
             def add_nodes(node, gap, nodes, coords):
                 if node.left and node.left.item != 0:  # if left subtree: position node to left of parent
-                    new_coord = [coords[0] - gap , coords[1] + 3*radius]
+                    new_coord = [coords[0] - gap , coords[1] + 4*radius]
                     node.left.pos = new_coord
                     node2 = coord(coords, new_coord, node.left.color,node.left.item, 'l')
                     nodes.append(node2)
@@ -441,7 +441,7 @@ class RedBlackTree:
                     add_nodes(node.left, gap//2, nodes, new_coord)
 
                 if node.right and node.right.item != 0:  # if right subtree: position node to right of parent
-                    new_coord = [coords[0] + gap , coords[1] + 3*radius]
+                    new_coord = [coords[0] + gap , coords[1] + 4*radius]
                     node.right.pos = new_coord
                     node3 = coord(coords, new_coord, node.right.color,node.right.item, 'r')
                     nodes.append(node3)

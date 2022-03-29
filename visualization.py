@@ -18,7 +18,7 @@ mid_canvas_height = canvas_height // 2
 f_b = ('Roboto', 16, 'bold')
 f = ('Roboto', 16)
 
-colors = ['black', 'red']
+colors = ['#111111', '#FF3333']
 radius = 16
 
 day = "day"
@@ -35,22 +35,32 @@ line = -1
 speed = 750
 p = 1
 
+
+def check_forest(arr):
+    global forest
+    for i in range(len(arr)-len(forest), len(arr)):
+        if arr[i] in forest:
+            continue
+        forest.append(arr[i])
+
+
 def step_to_step():
     global step
     global flag
     global forest
-    global speed 
+    global speed
     global p
     if p:
-        c.delete(ALL)
-        visualize(forest[flag])
-    
+
         if flag == len(forest) - 1:
-            step = flag
             return
         flag += 1
+        step = flag
+        c.delete(ALL)
+        visualize(forest[flag])
 
     c.after(speed, step_to_step)
+
 
 def check_input(ar):
     for i in ar:
@@ -76,6 +86,7 @@ def insert_tree():
             # nodes.append([f'o{i}', f'l{i}'])
             rbt.insert(int(i))
             # forest.append(rbt.get_coordinates())
+
             forest = rbt.get_forest()
             # print(f"{forest[-1]}")
         step_to_step()
@@ -133,11 +144,13 @@ def search_tree():
             notion.after(3000, notion.delete, se)
     print(ar_split)
 
+
 def random_tree():
-    box.delete(0,END)
-    arr = np.random.randint(100,size=16)
+    box.delete(0, END)
+    arr = np.random.randint(low=1, high=100, size=5)
     arr_split = ",".join(map(str, arr))
     box.insert(0, arr_split)
+
 
 def empty_canvas():
     global forest
@@ -148,7 +161,7 @@ def empty_canvas():
     for i in nodes:
         rbt.delete_node(i)
     forest.clear()
-    forest= []
+    forest = []
     step = 0
     flag = -1
 
@@ -156,6 +169,7 @@ def empty_canvas():
 def list_key():
     keys = ''.join(str(i) + ' ' for i in rbt.get_list_key())
     return keys
+
 
 def print_tree():
     keys = list_key()
@@ -167,8 +181,11 @@ def print_tree():
 def skip_back():
     global step
     global forest
+    global p
     if step <= 0:
         return
+    pause_button.config(text='Play')
+    p = 0
     step -= 1
     c.delete(ALL)
     visualize(forest[step])
@@ -184,19 +201,25 @@ def skip_forward():
     c.delete(ALL)
     visualize(forest[step])
 
+
 def pause():
     global p
+    global step
+    global flag
     if p:
         pause_button.config(text='Play')
+        p = 0
     else:
         pause_button.config(text='Pause')
-    p = abs(p - 1)
-    
+        flag = step
+        p = 1
+        step_to_step()
+
 
 def scale_speed(value):
     global speed
     speed = int(value)
-    speed_text.configure(text= f"Speed: {speed/1000}x")
+    speed_text.configure(text=f"Speed: {speed/1000}x")
     print(f"\n{speed}")
 
 
@@ -204,11 +227,12 @@ def visualize(nodes):
     for i in nodes:
         if i.side == 'l':
             create_edge(i.pos0[0] - radius + 3, i.pos0[1] + 10,
-                        i.pos1[0] + radius, i.pos1[1])
+                        i.pos1[0], i.pos1[1]-radius)
         elif i.side == 'r':
             create_edge(i.pos0[0] + radius - 3, i.pos0[1] + 10,
-                        i.pos1[0] - radius, i.pos1[1])
+                        i.pos1[0], i.pos1[1] - radius)
         create_node(i.pos1, i.color, f"{i.key}")
+
 
 def create_node(pos, color=0, text='null'):
     x = pos[0]
@@ -217,13 +241,14 @@ def create_node(pos, color=0, text='null'):
     coord = x - r, y - r, x + r, y + r
     o_tag = 'o' + text
     l_tag = 'l' + text
-    c.create_oval(coord, fill=colors[color], outline='black', width=3, tag=o_tag)
+    c.create_oval(coord, fill=colors[color],
+                  tag=o_tag, width=3, outline=colors[color])
     c.create_text(pos, text=text, font=f, fill='white',
                   justify='center', tag=l_tag)
     # nodes.append([o_tag, l_tag])
 
 
-def create_edge(x0, y0, x1, y1, color='black'):
+def create_edge(x0, y0, x1, y1, color='#696969'):
     c.create_line(x0, y0, x1, y1, fill=color, width=3)
 
 
@@ -242,9 +267,10 @@ root.geometry(f'{window_width}x{window_height}+{center_x}+{center_y}')
 
 # create canvas
 
-main = Frame(root, width=window_width, height=window_height, bg='#000000', highlightthickness=0)
+main = Frame(root, width=window_width, height=window_height,
+             bg='#000000', highlightthickness=0)
 main.pack(anchor=CENTER)
-# add control 
+# add control
 # add skipback button
 skipback = Button(main, text='Skip Back', highlightbackground='#000000',
                   highlightthickness=0, bg='#000000', fg='#ffffff', command=skip_back)
@@ -256,21 +282,21 @@ skipforward = Button(main, text='Skip Forward', highlightbackground='#000000',
 skipforward.place(x=window_width // 2 + 57, y=985)
 
 # add pause button
-pause_button = Button(main, text='Pause', highlightbackground='#000000',width=5,
-                     highlightthickness=0, bg='#000000', fg='#ffffff', command=pause)
+pause_button = Button(main, text='Pause', highlightbackground='#000000', width=5,
+                      highlightthickness=0, bg='#000000', fg='#ffffff', command=pause)
 pause_button.place(x=window_width // 2 - 21, y=985)
 
 # add scale speed button
 var = IntVar(None, 750)
-scale = Scale( main, variable = var , bg='#000000', from_=0, to=1500, resolution=100,showvalue=0, orient=HORIZONTAL, length=200,width = 15, fg='#ffffff',command=scale_speed)
+scale = Scale(main, variable=var, bg='#000000', from_=0, to=1500, resolution=100,
+              showvalue=0, orient=HORIZONTAL, length=200, width=15, fg='#ffffff', command=scale_speed)
 scale.place(x=100, y=990)
 speed_text = Label(main, bg='#000000', fg='#ffffff')
-speed_text.config(text= f"Speed: {speed/1000}x")
+speed_text.config(text=f"Speed: {speed/1000}x")
 speed_text.place(x=310, y=990)
 
 
-
-c = Canvas(main, width=canvas_width, height=canvas_height, bg='white')
+c = Canvas(main, width=canvas_width, height=canvas_height, bg='#ECECEC')
 c.pack(padx=40, pady=40, fill=BOTH, expand=True)
 
 fr_bg = '#FEC515'
@@ -280,7 +306,8 @@ notion = Canvas(c, width=200, height=300, bg='#B1D149',
 notion.place(x=1400 - 8, y=635)
 
 # control panel
-fr = Frame(c, width=150, height=172, bg=fr_bg,highlightcolor='#000000', highlightthickness=0)
+fr = Frame(c, width=150, height=172, bg=fr_bg,
+           highlightcolor='#000000', highlightthickness=0)
 fr.place(x=8, y=715)
 
 # add box
