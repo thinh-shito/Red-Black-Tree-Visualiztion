@@ -1,13 +1,12 @@
 import redblacktree as rbt
 from tkinter import *
 from tkinter import Canvas
-import time
 import redblacktree as RBT
 import numpy as np
 from numpy import random
 
 window_width = 1680
-window_height = 1050
+window_height = 900
 
 canvas_width = 1600
 canvas_height = 970
@@ -16,7 +15,7 @@ mid_canvas_width = canvas_width // 2
 mid_canvas_height = canvas_height // 2
 
 f_b = ('Roboto', 16, 'bold')
-f = ('Roboto', 16)
+f = ('Roboto', 14)
 
 colors = ['#111111', '#FF3333']
 radius = 16
@@ -269,47 +268,47 @@ root.geometry(f'{window_width}x{window_height}+{center_x}+{center_y}')
 
 main = Frame(root, width=window_width, height=window_height,
              bg='#000000', highlightthickness=0)
-main.pack(anchor=CENTER)
+main.pack(anchor=CENTER, expand = True,fill = 'y' )
 # add control
 # add skipback button
 skipback = Button(main, text='Skip Back', highlightbackground='#000000',
                   highlightthickness=0, bg='#000000', fg='#ffffff', command=skip_back)
-skipback.place(x=window_width // 2 - 115, y=985)
+skipback.pack(side = RIGHT, anchor = S, padx =5, pady = 5)
 
 # add skipforward button
 skipforward = Button(main, text='Skip Forward', highlightbackground='#000000',
                      highlightthickness=0, bg='#000000', fg='#ffffff', command=skip_forward)
-skipforward.place(x=window_width // 2 + 57, y=985)
+skipforward.pack(side = RIGHT, anchor = S, padx =5, pady = 5)
 
 # add pause button
 pause_button = Button(main, text='Pause', highlightbackground='#000000', width=5,
                       highlightthickness=0, bg='#000000', fg='#ffffff', command=pause)
-pause_button.place(x=window_width // 2 - 21, y=985)
+pause_button.pack(side = RIGHT, anchor = S, padx =5, pady = 5)
 
 # add scale speed button
 var = IntVar(None, 750)
 scale = Scale(main, variable=var, bg='#000000', from_=0, to=1500, resolution=100,
               showvalue=0, orient=HORIZONTAL, length=200, width=15, fg='#ffffff', command=scale_speed)
-scale.place(x=100, y=990)
+scale.pack(side = LEFT, anchor = S, padx =5, pady = 5)
 speed_text = Label(main, bg='#000000', fg='#ffffff')
 speed_text.config(text=f"Speed: {speed/1000}x")
-speed_text.place(x=310, y=990)
+speed_text.pack(side =LEFT, anchor = S, padx =5, pady = 5)
 
 
 c = Canvas(main, width=canvas_width, height=canvas_height, bg='#ECECEC')
-c.pack(padx=40, pady=40, fill=BOTH, expand=True)
+c.pack(padx=40, pady=40, fill=BOTH, expand=True, anchor=CENTER)
 
 fr_bg = '#FEC515'
 
 notion = Canvas(c, width=200, height=300, bg='#B1D149',
                 highlightthickness=0)  # B1D149
-notion.place(x=1400 - 8, y=635)
+notion.pack(side = RIGHT, anchor = SE, padx= 10, pady = 10)
 
-# control panel
+
+# method  panel
 fr = Frame(c, width=150, height=172, bg=fr_bg,
            highlightcolor='#000000', highlightthickness=0)
-fr.place(x=8, y=715)
-
+fr.pack(anchor = SW, side = LEFT, pady= 10, padx = 10, expand = True)
 # add box
 box = Entry(fr, font=('Robot', 16), bg='#FFCC99', fg='white',
             width=15, highlightthickness=0, borderwidth=0)
