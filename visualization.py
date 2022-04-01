@@ -1,4 +1,3 @@
-import redblacktree as rbt
 from tkinter import *
 from tkinter import Canvas
 import time
@@ -86,7 +85,6 @@ def insert_tree():
             # nodes.append([f'o{i}', f'l{i}'])
             rbt.insert(int(i))
             # forest.append(rbt.get_coordinates())
-
             forest = rbt.get_forest()
             # print(f"{forest[-1]}")
         step_to_step()
@@ -272,12 +270,12 @@ main = Frame(root, width=window_width, height=window_height,
 main.pack(anchor=CENTER)
 # add control
 # add skipback button
-skipback = Button(main, text='Skip Back', highlightbackground='#000000',
+skipback = Button(main, text='Step Back', highlightbackground='#000000',
                   highlightthickness=0, bg='#000000', fg='#ffffff', command=skip_back)
 skipback.place(x=window_width // 2 - 115, y=985)
 
 # add skipforward button
-skipforward = Button(main, text='Skip Forward', highlightbackground='#000000',
+skipforward = Button(main, text='Step Forward', highlightbackground='#000000',
                      highlightthickness=0, bg='#000000', fg='#ffffff', command=skip_forward)
 skipforward.place(x=window_width // 2 + 57, y=985)
 
