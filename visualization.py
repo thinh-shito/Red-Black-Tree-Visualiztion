@@ -1,3 +1,4 @@
+import redblacktree as rbt
 from tkinter import *
 from tkinter import Canvas
 import time
@@ -15,8 +16,9 @@ mid_canvas_width = canvas_width // 2
 mid_canvas_height = canvas_height // 2
 
 f_b = ('Roboto', 16, 'bold')
-f = ('Roboto', 16)
+f = ('Roboto', 14)
 
+fr_bg = '#009900'
 colors = ['#111111', '#FF3333']
 radius = 16
 
@@ -31,7 +33,7 @@ step = 0
 flag = -1
 rbt = RBT.RedBlackTree()
 line = -1
-speed = 750
+speed = 500
 p = 1
 
 
@@ -85,6 +87,7 @@ def insert_tree():
             # nodes.append([f'o{i}', f'l{i}'])
             rbt.insert(int(i))
             # forest.append(rbt.get_coordinates())
+
             forest = rbt.get_forest()
             # print(f"{forest[-1]}")
         step_to_step()
@@ -105,7 +108,7 @@ def delete_tree():
             error = f"Node {i} is not in the tree"
             # tag = f"err{line}"
             notion.create_text(100, 20 + line * 20, text=error,
-                               font=f, fill='black', tag=de, justify='left')
+                               font=f, fill='red', tag=de, justify='left')
             notion.after(3000, notion.delete, de)
         else:
             rbt.delete_node(int(i))
@@ -113,9 +116,10 @@ def delete_tree():
             # tag = f"err{line}"
             notion.create_text(100, 20 + line * 20, text=verify,
                                font=f, fill='black', tag=de, justify='left')
-            notion.after(3000, notion.delete, de)
+            notion.after(2000, notion.delete, de)
             forest.append(rbt.get_coordinates())
             step_to_step()
+        if 20 + line *20 >= 280: line = -1
     print(ar_split)
 
 
@@ -131,7 +135,7 @@ def search_tree():
             error = f"Node {i} is not in the tree"
             # tag = f"err{line}"
             notion.create_text(100, 20 + line * 20, text=error,
-                               font=f, fill='black', tag=se, justify='left')
+                               font=f, fill='red', tag=se, justify='left')
             notion.after(3000, notion.delete, se)
         else:
             rbt.delete_node(int(i))
@@ -139,7 +143,8 @@ def search_tree():
             # tag = f"err{line}"
             notion.create_text(100, 20 + line * 20, text=verify,
                                font=f, fill='black', tag=se, justify='left')
-            notion.after(3000, notion.delete, se)
+            notion.after(2000, notion.delete, se)
+        if 20 + line *20 >= 280: line = -1
     print(ar_split)
 
 
@@ -171,12 +176,11 @@ def list_key():
 
 def print_tree():
     keys = list_key()
-    # c.delete(tags[0])
-    node = c.create_text(mid_canvas_width, canvas_height - 50,
-                         text=keys, font=('Roboto', 20), fill='black', tag=day, justify='center')
+    print = c.create_text(mid_canvas_width, canvas_height - 100,
+                          text=keys, font=('Roboto', 20), fill='black', justify='center')
 
 
-def skip_back():
+def stepback():
     global step
     global forest
     global p
@@ -189,7 +193,7 @@ def skip_back():
     visualize(forest[step])
 
 
-def skip_forward():
+def stepforward():
     global step
     global forest
     if step >= len(forest) - 1:
@@ -243,7 +247,6 @@ def create_node(pos, color=0, text='null'):
                   tag=o_tag, width=3, outline=colors[color])
     c.create_text(pos, text=text, font=f, fill='white',
                   justify='center', tag=l_tag)
-    # nodes.append([o_tag, l_tag])
 
 
 def create_edge(x0, y0, x1, y1, color='#696969'):
@@ -263,87 +266,102 @@ center_y = int(screen_height / 2 - window_height / 2)
 # set the position of the window to the center of the screen
 root.geometry(f'{window_width}x{window_height}+{center_x}+{center_y}')
 
-# create canvas
-
+# add layer
 main = Frame(root, width=window_width, height=window_height,
              bg='#000000', highlightthickness=0)
-main.pack(anchor=CENTER)
-# add control
-# add skipback button
-skipback = Button(main, text='Step Back', highlightbackground='#000000',
-                  highlightthickness=0, bg='#000000', fg='#ffffff', command=skip_back)
-skipback.place(x=window_width // 2 - 115, y=985)
-
-# add skipforward button
-skipforward = Button(main, text='Step Forward', highlightbackground='#000000',
-                     highlightthickness=0, bg='#000000', fg='#ffffff', command=skip_forward)
-skipforward.place(x=window_width // 2 + 57, y=985)
-
-# add pause button
-pause_button = Button(main, text='Pause', highlightbackground='#000000', width=5,
-                      highlightthickness=0, bg='#000000', fg='#ffffff', command=pause)
-pause_button.place(x=window_width // 2 - 21, y=985)
-
-# add scale speed button
-var = IntVar(None, 750)
-scale = Scale(main, variable=var, bg='#000000', from_=0, to=1500, resolution=100,
-              showvalue=0, orient=HORIZONTAL, length=200, width=15, fg='#ffffff', command=scale_speed)
-scale.place(x=100, y=990)
-speed_text = Label(main, bg='#000000', fg='#ffffff')
-speed_text.config(text=f"Speed: {speed/1000}x")
-speed_text.place(x=310, y=990)
-
+main.pack(anchor=CENTER, fill=BOTH, expand=True)
 
 c = Canvas(main, width=canvas_width, height=canvas_height, bg='#ECECEC')
+c.config(highlightthickness=0)
 c.pack(padx=40, pady=40, fill=BOTH, expand=True)
 
-fr_bg = '#FEC515'
 
-notion = Canvas(c, width=200, height=300, bg='#B1D149',
-                highlightthickness=0)  # B1D149
-notion.place(x=1400 - 8, y=635)
+method_panel = Frame(c, width=150, height=172, )
+method_panel.config(bg=fr_bg, highlightcolor='#000000', highlightthickness=0)
+method_panel.pack(padx=10, pady=10, side=LEFT, anchor=SW)
 
-# control panel
-fr = Frame(c, width=150, height=172, bg=fr_bg,
-           highlightcolor='#000000', highlightthickness=0)
-fr.place(x=8, y=715)
+control_panel = Frame(c, width=100, height=50, )
+control_panel.config(
+    bg='#000000', highlightcolor='#000000', highlightthickness=0)
+control_panel.pack(padx = 250,pady=10, side=LEFT, anchor=S)
 
+notion = Canvas(c, width=200, height=300,)
+notion.config(bg='#B1D149', highlightthickness=0)  # B1D149 #ECECEC
+notion.pack(padx=10, pady=10, side=RIGHT, anchor=S)
+
+# add control
+
+# add scale speed button
+var = DoubleVar(None,750)
+scale = Scale(control_panel, variable=var, bg='#000000', command=scale_speed)
+scale.config(from_=500, to=1500, resolution=50, )
+scale.config(showvalue=0, orient=HORIZONTAL, length=200, width=15)
+scale.pack(side=LEFT, pady = 3)
+
+speed_text = Label(control_panel, bg='#000000', fg='#ffffff')
+speed_text.config(text=f"Speed: {speed/1000}x")
+speed_text.pack(side=LEFT)
+
+# add skipback button
+step_back = Button(control_panel, text='Skip Back', command=stepback)
+step_back.config(width=10)
+step_back.config(highlightbackground='#000000',
+                 highlightthickness=0, bg='#000000')
+step_back.pack(side=LEFT,pady = 3)
+
+# add pause button
+pause_button = Button(control_panel, text='Pause', command=pause)
+pause_button.config(width=5)
+pause_button.config(highlightbackground='#000000',
+                    highlightthickness=0, bg='#000000')
+pause_button.pack(side=LEFT,pady = 3)
+
+# add skipforward button
+step_forward = Button(control_panel, text='Skip Forward', command=stepforward)
+step_forward.config(width=10)
+step_forward.config(highlightbackground='#000000',
+                    highlightthickness=0, bg='#000000')
+step_forward.pack(side=LEFT,pady = 3)
+
+
+# add method
 # add box
-box = Entry(fr, font=('Robot', 16), bg='#FFCC99', fg='white',
+box = Entry(method_panel, font=('Robot', 16), bg='#33CC66', fg='white',
             width=15, highlightthickness=0, borderwidth=0)
 box.pack(padx=5, pady=5, expand=True, fill=BOTH)
 
 # add randomize button
-random_button = Button(fr, text="Random", command=random_tree,
+random_button = Button(method_panel, text="Random", command=random_tree,
                        bg=fr_bg, fg='white', highlightbackground=fr_bg)
 random_button.pack(expand=True, fill=BOTH)
 # add insertion button
-insert_button = Button(fr, text="Insert", command=insert_tree,
+insert_button = Button(method_panel, text="Insert", command=insert_tree,
                        bg=fr_bg, fg='white', highlightbackground=fr_bg)
 insert_button.pack(expand=True, fill=BOTH)
 
 # add find button
-search_button = Button(fr, text="Search", command=search_tree,
+search_button = Button(method_panel, text="Search", command=search_tree,
                        bg=fr_bg, fg='white', highlightbackground=fr_bg)
 search_button.pack(expand=True, fill=BOTH)
 
 # add deletion button
-deletion_button = Button(fr, text="Delete", command=delete_tree,
+deletion_button = Button(method_panel, text="Delete", command=delete_tree,
                          bg=fr_bg, fg='white', highlightbackground=fr_bg)
 deletion_button.pack(expand=True, fill=BOTH)
 
 # add  empty button
-empty_button = Button(fr, text="Empty", command=empty_canvas,
+empty_button = Button(method_panel, text="Empty", command=empty_canvas,
                       bg=fr_bg, fg='white', highlightbackground=fr_bg)
 empty_button.pack(expand=True, fill=BOTH)
 
 # add print button
-print_button = Button(fr, text="Print", command=print_tree,
+print_button = Button(method_panel, text="Print", command=print_tree,
                       bg=fr_bg, fg='white', highlightbackground=fr_bg)
 print_button.pack(expand=True, fill=BOTH)
 
 # add label
-label = Label(fr, text="Method", bg=fr_bg,
+label = Label(method_panel, text="Method", bg=fr_bg,
               fg='white', highlightbackground=fr_bg)
 label.pack(padx=10, expand=True, fill=BOTH)
+
 root.mainloop()
