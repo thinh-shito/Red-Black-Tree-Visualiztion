@@ -87,7 +87,6 @@ def insert_tree():
             # nodes.append([f'o{i}', f'l{i}'])
             rbt.insert(int(i))
             # forest.append(rbt.get_coordinates())
-
             forest = rbt.get_forest()
             # print(f"{forest[-1]}")
         step_to_step()
@@ -221,7 +220,7 @@ def pause():
 def scale_speed(value):
     global speed
     speed = int(value)
-    speed_text.configure(text=f"Speed: {speed/1000}x")
+    speed_text.config(text=f"{(1500-speed)/1000}x")
     print(f"\n{speed}")
 
 
@@ -282,7 +281,7 @@ method_panel.pack(padx=10, pady=10, side=LEFT, anchor=SW)
 
 control_panel = Frame(c, width=100, height=50, )
 control_panel.config(
-    bg='#000000', highlightcolor='#000000', highlightthickness=0)
+    bg='#FFBF00', highlightcolor='#FFBF00', highlightthickness=0)
 control_panel.pack(padx = 250,pady=10, side=LEFT, anchor=S)
 
 notion = Canvas(c, width=200, height=300,)
@@ -292,35 +291,35 @@ notion.pack(padx=10, pady=10, side=RIGHT, anchor=S)
 # add control
 
 # add scale speed button
-var = DoubleVar(None,750)
-scale = Scale(control_panel, variable=var, bg='#000000', command=scale_speed)
+var = DoubleVar(None,1500)
+scale = Scale(control_panel, variable=var, bg='#FFBF00', command=scale_speed)
 scale.config(from_=500, to=1500, resolution=50, )
 scale.config(showvalue=0, orient=HORIZONTAL, length=200, width=15)
 scale.pack(side=LEFT, pady = 3)
 
-speed_text = Label(control_panel, bg='#000000', fg='#ffffff')
-speed_text.config(text=f"Speed: {speed/1000}x")
+speed_text = Label(control_panel, bg='#FFBF00', fg='#ffffff')
+speed_text.config(text=f"{(1500-speed)/1000}x")
 speed_text.pack(side=LEFT)
 
 # add skipback button
 step_back = Button(control_panel, text='Skip Back', command=stepback)
 step_back.config(width=10)
-step_back.config(highlightbackground='#000000',
-                 highlightthickness=0, bg='#000000')
+step_back.config(highlightbackground='#FFBF00',
+                 highlightthickness=0, bg='#FFBF00')
 step_back.pack(side=LEFT,pady = 3)
 
 # add pause button
 pause_button = Button(control_panel, text='Pause', command=pause)
 pause_button.config(width=5)
-pause_button.config(highlightbackground='#000000',
-                    highlightthickness=0, bg='#000000')
+pause_button.config(highlightbackground='#FFBF00',
+                    highlightthickness=0, bg='#FFBF00')
 pause_button.pack(side=LEFT,pady = 3)
 
 # add skipforward button
 step_forward = Button(control_panel, text='Skip Forward', command=stepforward)
 step_forward.config(width=10)
-step_forward.config(highlightbackground='#000000',
-                    highlightthickness=0, bg='#000000')
+step_forward.config(highlightbackground='#FFBF00',
+                    highlightthickness=0, bg='#FFBF00')
 step_forward.pack(side=LEFT,pady = 3)
 
 
