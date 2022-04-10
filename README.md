@@ -30,8 +30,8 @@
 | STT | Họ tên | MSSV | Email  | Github |
 |:----|:-------|:----:|:------:|:------:|
 | 1 | Đỗ Đức Thịnh | 20520780 | 20520780@gm.uit.edu.vn | https://github.com/thinh-shito |
-| 2 | Nguyễn Phan Quốc Thiện | 20520780 | 20520775@gm.uit.edu.vn | https://github.com/npq-thien |
-| 3 | Võ Duy Khang | 20521441 | 20521441@gm.uit.edu.vn | |
+| 2 | Nguyễn Phan Quốc Thiện | 20520775 | 20520775@gm.uit.edu.vn | https://github.com/npq-thien |
+| 3 | Võ Duy Khang | 20521441 | 20521441@gm.uit.edu.vn | https://github.com/DuyKhang1111 |
 
 
 ## CHỦ ĐỀ BÁO CÁO
