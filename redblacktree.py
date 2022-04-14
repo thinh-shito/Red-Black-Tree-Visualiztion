@@ -93,15 +93,13 @@ class RedBlackTree:
             if x == x.parent.left:
                 s = x.parent.right
                 if s.color == 1:
-                    # s.color = 0
-                    # x.parent.color = 1
-                    t1 = s
-                    t2 = x.parent
+                    s.color = 0
+                    x.parent.color = 1
+                
                     self.forest.append(self.get_coordinates())
                     self.left_rotate(x.parent)
                     self.forest.append(self.get_coordinates())
-                    t1.color = 0
-                    t2.color = 1
+                  
                     s = x.parent.right
 
                 if s.left.color == 0 and s.right.color == 0:
@@ -111,40 +109,34 @@ class RedBlackTree:
                     
                 else:
                     if s.right.color == 0:
-                        # s.left.color = 0
-                        # s.color = 1
-                        t1 = s.left
-                        t2 = s
+                        s.left.color = 0
+                        s.color = 1
+                    
                         self.forest.append(self.get_coordinates())
                         self.right_rotate(s)
                         self.forest.append(self.get_coordinates())
-                        t1.color = 0
-                        t2.color = 1
+                    
                         s = x.parent.right
 
                     s.color = x.parent.color
-                    # x.parent.color = 0
-                    # s.right.color = 0
-                    t1 = s.right
-                    t2 = x.parent
+                    x.parent.color = 0
+                    s.right.color = 0
+                   
                     self.forest.append(self.get_coordinates())
                     self.left_rotate(x.parent)
                     self.forest.append(self.get_coordinates())
-                    t1.color = 0
-                    t2.color = 0
+                    
                     x = self.root
             else:
                 s = x.parent.left
                 if s.color == 1:
-                    # s.color = 0
-                    # x.parent.color = 1
-                    t1 = s
-                    t2 = x.parent
+                    s.color = 0
+                    x.parent.color = 1
+
                     self.forest.append(self.get_coordinates())
                     self.right_rotate(x.parent)
                     self.forest.append(self.get_coordinates())
-                    t1.color = 0
-                    t2.color = 1
+                    
                     s = x.parent.left
 
                 if s.right.color == 0 and s.right.color == 0:
@@ -153,27 +145,23 @@ class RedBlackTree:
                     x = x.parent
                 else:
                     if s.left.color == 0:
-                        # s.right.color = 0
-                        # s.color = 1
-                        t1 = s.right
-                        t2 = s
+                        s.right.color = 0
+                        s.color = 1
+
                         self.forest.append(self.get_coordinates())
                         self.left_rotate(s)
                         self.forest.append(self.get_coordinates())
-                        t1.color = 0
-                        t2.color = 1
+                      
                         s = x.parent.left
 
                     s.color = x.parent.color
-                    # x.parent.color = 0
-                    # s.left.color = 0
-                    t1 = s.left
-                    t2 = x.parent
+                    x.parent.color = 0
+                    s.left.color = 0
+                   
                     self.forest.append(self.get_coordinates())
                     self.right_rotate(x.parent)
                     self.forest.append(self.get_coordinates())
-                    t1.color = 0
-                    t2.color = 0
+                    
                     x = self.root
         self.forest.append(self.get_coordinates())
         x.color = 0
