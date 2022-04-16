@@ -44,7 +44,6 @@ def check_forest(arr):
             continue
         forest.append(arr[i])
 
-
 def step_to_step():
     global step
     global flag
@@ -60,7 +59,6 @@ def step_to_step():
         step = flag
 
     c.after(speed, step_to_step)
-
 
 def check_input(ar):
     for i in ar:
@@ -154,7 +152,6 @@ def empty_canvas():
     for i in nodes:
         rbt.delete_node(i)
     forest.clear()
-    forest = []
     step = 0
     flag = 0
 
