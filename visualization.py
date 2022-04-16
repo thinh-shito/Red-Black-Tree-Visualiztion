@@ -91,6 +91,7 @@ def insert_tree():
 def delete_tree():
     global line
     global forest
+    global rbt
     c.delete(day)
     ar_split = box.get().split(',')
     box.delete(0, END)
@@ -290,7 +291,7 @@ speed_text.config(text=f"{(2000-speed)/1000}x")
 speed_text.pack(side=LEFT)
 
 # add skipback button
-step_back = Button(control_panel, text='Skip Back', command=stepback)
+step_back = Button(control_panel, text='Step back', command=stepback)
 step_back.config(width=10)
 step_back.config(highlightbackground='#FFBF00',
                  highlightthickness=0, bg='#FFBF00')
@@ -304,7 +305,7 @@ pause_button.config(highlightbackground='#FFBF00',
 pause_button.pack(side=LEFT, pady=3)
 
 # add skipforward button
-step_forward = Button(control_panel, text='Skip Forward', command=stepforward)
+step_forward = Button(control_panel, text='Step forward', command=stepforward)
 step_forward.config(width=10)
 step_forward.config(highlightbackground='#FFBF00',
                     highlightthickness=0, bg='#FFBF00')
