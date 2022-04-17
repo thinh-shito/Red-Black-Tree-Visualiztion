@@ -1,8 +1,8 @@
-import redblacktree as rbt
+import Code.redblacktree as rbt
 from tkinter import *
 from tkinter import Canvas
 import time
-import redblacktree as RBT
+import Code.redblacktree as RBT
 import numpy as np
 from numpy import random
 
