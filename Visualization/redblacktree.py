@@ -119,14 +119,15 @@ class RedBlackTree:
                         t2.color = 1
                         s = x.parent.right
                         self.forest.append(self.get_coordinates())
-
                     s.color = x.parent.color
                     # x.parent.color = 0
                     # s.right.color = 0
                     t1 = x.parent
                     t2 = s.right
                     self.left_rotate(x.parent)
+                    t1.parent.color = 0
                     self.forest.append(self.get_coordinates())
+                    t1.parent.color = 1
                     t1.color = 0
                     t2.color = 0
                     x = self.root
@@ -161,14 +162,16 @@ class RedBlackTree:
                         t2.color = 1
                         s = x.parent.left
                         self.forest.append(self.get_coordinates())
-
+                    # left left rotation
                     s.color = x.parent.color
                     # x.parent.color = 0
                     # s.left.color = 0
                     t1 = x.parent
                     t2 = s.left
                     self.right_rotate(x.parent)
+                    t1.parent.color = 0
                     self.forest.append(self.get_coordinates())
+                    t1.parent.color = 1
                     t1.color = 0
                     t2.color = 0
                     x = self.root
@@ -486,13 +489,3 @@ if __name__ == "__main__":
     # bst.insert(57)
 
     # bst.print_tree()
-
-    # print("\nAfter deleting an element")
-    # bst.delete_node(40)
-    # bst.print_tree()
-    # nodes = bst.get_list_key()
-    # print(nodes)
-    # rbt = RedBlackTree()
-    # for i in nodes:
-    #     rbt.insert(i)
-    # print(f"\n{rbt.get_list_key()}")
