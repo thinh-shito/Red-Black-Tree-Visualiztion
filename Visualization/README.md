@@ -9,7 +9,7 @@ App có các chức năng:
 4. Delete: xóa node
 5. Empty: xóa cây
 6. Print: xuất cây theo Inorder (Left, Root, Right)
-7. Pause, Step back, Step forward: dừng chèn, lùi 1 bước, tiến 1 bước
+7. Pause, Step back, Step forward: dừng thao tác, lùi 1 bước, tiến 1 bước
 
 ## UI
 ![image](https://github.com/thinh-shito/CTDL-GT/blob/code-file-README/Visualization/Resources/UI.png)
