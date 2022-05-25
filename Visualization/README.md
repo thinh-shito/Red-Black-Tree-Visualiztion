@@ -12,5 +12,5 @@ App có các chức năng:
 7. Pause, Step back, Step forward: dừng thao tác, lùi 1 bước, tiến 1 bước
 
 ## UI
-![image](https://github.com/thinh-shito/CTDL-GT/blob/code-file-README/Visualization/Resources/UI.png)
+![image](https://github.com/thinh-shito/CTDL-GT/blob/main/Visualization/Resources/UI.png)
 
